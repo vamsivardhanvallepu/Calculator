@@ -1,13 +1,15 @@
 import { useState } from "react";
-import useCalculatorStore from "./useCalculatorStore";
 import { evaluate } from "mathjs";
+import useThemeStore from "./useThemeStore";
+import useCalculatorStore from "./useCalculatorStore";
 
 const Calculator = () => {
   const { components } = useCalculatorStore();
+  const { theme } = useThemeStore();
   const [display, setDisplay] = useState("");
 
   const handleClick = (value) => {
-    setDisplay(display + value);
+    setDisplay((prev) => prev + value);
   };
 
   const handleClear = () => {
@@ -24,19 +26,24 @@ const Calculator = () => {
   };
 
   return (
-    <div className="max-w-sm mx-auto bg-gray-800 text-white p-4 rounded-lg shadow-lg">
+    <div
+      className={`max-w-sm mx-auto p-4 rounded-lg shadow-lg ${theme === "dark" ? "bg-gray-800 text-white" : "bg-white text-black"
+        }`}
+    >
       <input
         type="text"
         value={display}
         readOnly
-        className="w-full text-right text-2xl p-3 bg-gray-900 rounded-md outline-none"
+        className="w-full text-right text-2xl p-3 bg-gray-300 dark:bg-gray-900 rounded-md outline-none"
       />
       <div className="grid grid-cols-4 gap-2 mt-3">
         {components.map((comp, index) => (
           <button
             key={index}
-            className="p-3 text-xl bg-gray-700 rounded-md hover:bg-gray-600"
-            onClick={() => (comp.label === "=" ? handleEvaluate() : handleClick(comp.label))}
+            className="p-3 text-xl bg-gray-400 dark:bg-gray-700 rounded-md hover:bg-gray-500 dark:hover:bg-gray-600"
+            onClick={() =>
+              comp.label === "=" ? handleEvaluate() : handleClick(comp.label)
+            }
           >
             {comp.label}
           </button>
